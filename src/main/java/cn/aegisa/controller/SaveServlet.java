@@ -1,8 +1,11 @@
 package cn.aegisa.controller;
 
+import cn.aegisa.utils.RedisClusterUtil;
 import cn.aegisa.utils.RedisUtil;
 import com.alibaba.fastjson.JSON;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisCluster;
+import redis.clients.jedis.ShardedJedis;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -31,9 +34,10 @@ public class SaveServlet extends HttpServlet {
             response.getWriter().write(jsonString);
             return;
         }
-        Jedis jedis = null;
+//        Jedis jedis = null;
+        JedisCluster jedis = null;
         try {
-            jedis = RedisUtil.getJedis();
+            jedis = RedisClusterUtil.getJedis();
             jedis.set(key, value);
             jedis.expire(key, 300);
             result.put("success", true);
@@ -42,12 +46,12 @@ public class SaveServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             result.put("success", false);
-            result.put("message", "Exception");
+            result.put("message", e.toString());
             String jsonString = JSON.toJSONString(result);
             response.getWriter().write(jsonString);
         } finally {
             if (jedis != null) {
-                jedis.close();
+//                jedis.close();
             }
         }
     }
