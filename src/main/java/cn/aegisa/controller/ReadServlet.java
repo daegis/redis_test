@@ -48,7 +48,7 @@ public class ReadServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             result.put("success", false);
-            result.put("message", "Exception");
+            result.put("message", e.toString());
             String jsonString = JSON.toJSONString(result);
             response.getWriter().write(jsonString);
         } finally {
